@@ -1,0 +1,22 @@
+como va a funcionar el juego?. 
+
+se va a formar una lista de keypresses que se va a envíar al servidor para que la procese. estos están tipados y tienen una frecuencia de envío definida por el servidor.
+
+Estos eventos van a ser agregados al final de cada frame, mediante un fold de la lista de eventos de tecla que va a resultar en una lista de eventos de juego, mediante la siguiente lógica:
+
+Cada evento "key trust" velocidad + 1
+Cada evento "key brake" velocidad - 1
+Los eventos de giro rotan la nave.
+Cada evento de disparo dispara una bala.
+
+(Debo definir una lógica de repeticion para los key-trust y key-brake, revisar, también, la velocidad puede variar fraccionariamente quizás)
+
+El juego va a funcionar a 20 intercambios cliente/servidor a lo sumo. No se puede mucho mas por el protocolo de red, pero las animaciones van a ser fluidas.
+
+Para el backend. Prometí usar Flow api.
+
+La idea es que un hilo vaya procesando los mensajes que llegan secuencialmente (sin pisarse), aunque los mensajes de los jugadores se pueden agregar para lograr los GameEvent.
+
+Ponele que hay un caché de keypresses en el backend, uno por jugador. En cada ciclo del backend, este toma esos keypresses, los agrega en gameevents (o se agregan previamente) y actualizan el estado, que es emitido a todos los jugadores.
+
+Hay un publisher de gameevents por cada jugador. El controlador está suscrito a todos y los usa para ir agregando los eventos. Cada tanto, hace broadcast del estado del juego por el websocket.

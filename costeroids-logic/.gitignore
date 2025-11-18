@@ -1,0 +1,28 @@
+# Gradle
+.gradle/
+build/
+.settings/
+.project
+.classpath
+
+# Scala
+target/
+*.class
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse (if used for Scala IDE)
+.metadata/
+org.scala-ide.sdt.core/
+
+# macOS
+.DS_Store
+
+# Logs and other generated files
+*.log
+*.log.*

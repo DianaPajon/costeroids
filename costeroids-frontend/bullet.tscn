@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://kdi2vj0k45il"]
+
+[ext_resource type="Texture2D" uid="uid://c1em8hjidghs0" path="res://balita.png" id="1_v7oki"]
+
+[node name="Bullet" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_v7oki")
