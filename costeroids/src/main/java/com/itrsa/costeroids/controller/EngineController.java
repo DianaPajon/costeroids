@@ -34,7 +34,7 @@ public class EngineController {
                 @Override
                 public void run() {
                     ticks += TICK_RATE;
-                    arrivedEvents.removeAll(processing);
+                    arrivedEvents.drainTo(processing);
                     processing.stream().forEach(
                             (event) -> engine.processEvents(event)
                     );
