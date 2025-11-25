@@ -29,18 +29,18 @@ public class StateSuscriber implements Flow.Subscriber<StateDTO> {
     }
 
     @Override
-    public synchronized void onNext(StateDTO newState) {
+    public void onNext(StateDTO newState) {
         if(completed) return;
         try{
-            session.sendAsync(newState);
-        } catch (WebSocketException e) {
-            //desuscribir ante sesión cerrada
-            if(!session.isOpen()){
-                session.close();
-                subscription.cancel();;
-            } else{
-                e.printStackTrace();
-            }
+            session.sendAsync(newState).handle(
+                    (t, state) -> {
+                        if(!session.isOpen()){
+                            session.close();
+                            subscription.cancel();;
+                        }
+                        return state;
+                    }
+            );
         } catch (Exception e){
             e.printStackTrace();
         }

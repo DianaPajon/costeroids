@@ -2,12 +2,15 @@ package com.itrsa.costeroids.controller;
 
 import com.itrsa.costeroids.logic.dto.input.KeyDTO;
 import com.itrsa.costeroids.logic.engine.GameEngine;
+import io.micronaut.websocket.WebSocketSession;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.function.Function;
 
@@ -17,10 +20,14 @@ public class EngineController {
     final GameEngine engine = new GameEngine();
     Timer timer;
     Long lastTick = 0L;
-    private StatePublisher statePublisher;
+
+    StatePublisher statePublisher = new StatePublisher();
+
     private LinkedTransferQueue<KeyDTO> arrivedEvents = new LinkedTransferQueue<KeyDTO>();
     private LinkedTransferQueue<KeyDTO> processing = new LinkedTransferQueue<KeyDTO>();
 
+    private final ConcurrentMap<String, WebSocketSession> inputSocketMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, StateSuscriber> suscribers = new ConcurrentHashMap<>();
 
     private static int ticks = 0;
 
@@ -54,21 +61,29 @@ public class EngineController {
         );
     }
 
-    private void loopFor(int milliseconds, Function loop){
-
-    }
-
-    public void setStatePublisher(StatePublisher publisher){
-        this.statePublisher = publisher;
-    }
-
-    public synchronized void updateState(KeyDTO keysPresses){
+    public void updateState(KeyDTO keysPresses){
         arrivedEvents.offer(keysPresses);
-        engine.processEvents(keysPresses);
     }
 
-    public String addPlayer(){
-        return this.engine.addPlayer();
+    public String addPlayer(String username, WebSocketSession session){
+        var id = this.engine.addPlayer();
+        var subscriber = new StateSuscriber(session);
+
+        this.inputSocketMap.put(id, session);
+        this.suscribers.put(username, subscriber);
+        this.statePublisher.subscribe(subscriber);
+
+
+        return id;
+    }
+
+    public void closeSession(String username){
+
+        this.inputSocketMap.remove(username);
+
+        var subscriber = this.suscribers.remove(username);
+        subscriber.onComplete();
+
     }
 
     private static final Integer TICK_RATE = 10;

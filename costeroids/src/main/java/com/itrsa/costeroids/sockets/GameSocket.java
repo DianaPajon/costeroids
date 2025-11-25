@@ -26,18 +26,18 @@ public class GameSocket {
     public GameSocket(GameController controller, KeySuscriber suscriber) {
         this.controller = controller;
         this.suscriber = suscriber;
-        LOG.info("output socket creado!");
+        LOG.debug("socket creado!");
     }
 
     @OnOpen
     public Publisher<String> onOpen(String username, WebSocketSession session) {
-        LOG.info("output socket abierto!");
+        LOG.debug("socket abierto!");
         return session.send(controller.addPlayer(username, session));
     }
 
     @OnClose
     public void onClose(String username, WebSocketSession session) {
-        LOG.info("output socket abierto!");
+        LOG.debug("socket cerrado!");
         controller.closeSession(username);
     }
 
