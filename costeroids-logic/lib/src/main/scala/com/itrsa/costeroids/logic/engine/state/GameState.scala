@@ -13,8 +13,9 @@ class GameState {
 
   def addPlayer(id:String): Unit = {
     if(players.size <= 8) {
-      players.addOne(id, PlayerState(id));
-      ships.addOne(id, Ship(nextCoordinate, math.Pi - math.Pi / 8 *(players.size-1), id))
+      val playerst = PlayerState(id, 10);
+      players.addOne(id, playerst);
+      ships.addOne(id, Ship(nextCoordinate, math.Pi - math.Pi / 8 *(players.size-1), id, playerst.hp))
     }
   }
   

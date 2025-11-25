@@ -13,3 +13,6 @@ case class PlayerDeathEvent(playerId:String) extends GameEvent;
 case class TickEvent(elapsedTime: Double) extends GameEvent;
 
 case class WinEvent(playerId:String) extends GameEvent;
+
+
+case class HitEvent(playerId:String, bulletId:String) extends GameEvent;

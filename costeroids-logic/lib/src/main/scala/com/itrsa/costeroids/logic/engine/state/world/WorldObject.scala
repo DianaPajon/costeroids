@@ -5,7 +5,7 @@ sealed trait WorldObject() {
   var position:Coordinate;
 }
 
-case class Ship(var position:Coordinate, var rotation: Double, playerId:String) extends WorldObject(){
+case class Ship(var position:Coordinate, var rotation: Double, playerId:String, var hp:Integer) extends WorldObject(){
 
   override def collides(w: WorldObject): Boolean =
     math.abs(w.position.x - this.position.x) < 20 &&

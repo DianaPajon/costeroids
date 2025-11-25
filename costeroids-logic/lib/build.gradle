@@ -35,3 +35,13 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
+
+
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.debugLevel = "vars"
+}
+
+jar {
+    // Optional: Include source files in the JAR for better debugging experience
+    from sourceSets.main.allSource
+}

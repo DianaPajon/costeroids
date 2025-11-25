@@ -3,7 +3,7 @@ package com.itrsa.costeroids.logic.engine.eventprocessor
 import com.itrsa.costeroids.logic.engine.state.GameState
 import com.itrsa.costeroids.logic.engine.state.player.PlayerState
 import com.itrsa.costeroids.logic.engine.state.world.{Bullet, Coordinate}
-import com.itrsa.costeroids.logic.events.{FireEvent, GameEvent, KeyBrakeEvent, KeyEvent, KeyLeftEvent, KeyRightEvent, NewPlayerEvent, PlayerDeathEvent, PlayerEvent, ThrustEvent, TickEvent, WinEvent}
+import com.itrsa.costeroids.logic.events.{FireEvent, GameEvent, HitEvent, KeyBrakeEvent, KeyEvent, KeyLeftEvent, KeyRightEvent, NewPlayerEvent, PlayerDeathEvent, PlayerEvent, ThrustEvent, TickEvent, WinEvent}
 
 import java.util.UUID
 import scala.collection.mutable.{ArrayBuffer, ListBuffer};
@@ -17,6 +17,7 @@ class EventProcessor {
       case PlayerDeathEvent(id:String) => deathEvent(id, s);
       case TickEvent(elapsedTime:Double) => tickEvent(s, elapsedTime);
       case WinEvent(id:String) => winEvent(id, s);
+      case HitEvent(id:String, bulletId:String) => hitEvent(id, bulletId,  s);
     }
   
   def addPlayerEvent(id:String, s:GameState) = {
@@ -42,7 +43,7 @@ class EventProcessor {
         ship.speed = ship.speed.plus(getSpeed(player, ship.rotation))
         ship.rotation = getRotation(player, gameState.ships(id).rotation)
         gameState.ships.put(id, ship)
-        gameState.players.put(id, new PlayerState(id))
+        gameState.players.put(id, new PlayerState(id, 10))
       }
     )
 
@@ -79,12 +80,15 @@ class EventProcessor {
     ).keySet
     gameState.bullets = gameState.bullets.filter((key,bulet) => !bulletsToRemove.contains(key))
 
-    //check for collisions
+
+
+
+    //check for deaths
     val deathEvents = gameState.bullets.map(
       (id, bullet) => {
         val hit = gameState.ships.filter((id, ship) =>
         {
-          bullet.playerId != ship.playerId && ship.collides(bullet)
+          bullet.playerId != ship.playerId && ship.collides(bullet) && ship.hp <= 1
         }).map((k,v) => k).headOption
         hit.map(present => PlayerDeathEvent(present))
       }
@@ -95,11 +99,34 @@ class EventProcessor {
     )
 
     //process deaths
-    val finalState = deathEvents.foldLeft(gameState)(
+    var finalState = deathEvents.foldLeft(gameState)(
       (state, event) => {
        this.processEvent(event.get, state);
       }
     )
+
+
+    //check for collisions
+    val hitEvents = gameState.bullets.map(
+      (id, bullet) => {
+        val hit = gameState.ships.filter((id, ship) =>
+        {
+          bullet.playerId != ship.playerId && ship.collides(bullet) && ship.hp > 1
+        }).map((k,v) => k).headOption
+        hit.map(present => HitEvent(present, id))
+      }
+    ).filter(
+      option => {
+        option.isDefined
+      }
+    )
+    finalState = hitEvents.foldLeft(gameState)(
+      (state, event) => {
+        this.processEvent(event.get, state);
+      }
+    )
+
+
     finalState
   }
 
@@ -127,6 +154,15 @@ class EventProcessor {
     )
     state
   }
+
+
+  def hitEvent(id: String, bulletId: String, state: GameState): GameState = {
+    state.players.get(id).head.hp = state.players.get(id).head.hp - 1
+    state.ships.get(id).head.hp = state.ships.get(id).head.hp - 1
+    state.bullets.remove(bulletId)
+    state
+  }
+
 
   private def getSpeed(player: PlayerState, rotation:Double) =
     Coordinate(math.cos(math.Pi/2-rotation), math.sin(math.Pi/2-rotation)).mult(player.thrustPresses - player.brakePresses).mult(0.0001)

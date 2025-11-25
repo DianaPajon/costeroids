@@ -16,13 +16,19 @@ var inputopen = false;
 #Escenas
 var nave_scene = preload("res://nave.tscn")
 var bullet_scene = preload("res://bullet.tscn")
+var healthbarScene = preload("res://scene.tscn")
 
 #Estado:
 var objectMap = {}
 
+
+#Barritas de vida:
+var healthBars = {}
+
+
 #aux
 var every200 = 0;
-
+var contador_jugadores = 1;
 
 #Constantes
 const SHIP_TYPE = "SHIP_TYPE"
@@ -45,8 +51,12 @@ func _process(delta:float):
 					for ship in updateState["ships"]:
 						if(!objectMap.has(ship.id)): 
 							objectMap[ship.id] = crear_nave(Vector2(ship.center.x, ship.center.y), ship.rotation, ship.id)
+							healthBars[ship.id] = crear_health_bar(Vector2(10, 30*contador_jugadores), ship.id, "Tú"  if (ship.id == userId)  else str("enemigo ", contador_jugadores), ship.hp)
+							contador_jugadores = contador_jugadores + 1;
 						objectMap[ship.id]["position"] = Vector2(ship.center.x, ship.center.y)
 						objectMap[ship.id]["rotation"] = ship.rotation
+						healthBars[ship.id].health = ship.hp
+						healthBars[ship.id].otro = ship.id == userId
 					if(updateState.has("bullets")):
 						for bullet in updateState["bullets"]:
 							if(!objectMap.has(bullet.id)):
@@ -129,6 +139,14 @@ func crear_bullet(position:Vector2, rotation: float, id:String) -> Dictionary:
 	bullet["rotation"] = rotation;
 	bullet["type"] = BULLET_TYPE
 	return bullet;
+
+func crear_health_bar(position:Vector2, id:String, playerName:String, hp:int):
+	var bar_instance = healthbarScene.instantiate()
+	bar_instance.position = position
+	bar_instance.nombre = playerName;
+	bar_instance.health = hp
+	add_child(bar_instance)
+	return bar_instance
 	
 func show_bullet(bullet:Dictionary):
 	bullet.instance = bullet_scene.instantiate()

@@ -6,12 +6,14 @@ public class ShipDTO implements Serializable {
     CoordinateDTO center;
     double rotation;
     String id;
+    Integer hp;
     
 
-    public ShipDTO(CoordinateDTO center, double rotation, String id) {
+    public ShipDTO(CoordinateDTO center, double rotation, String id, Integer hp) {
         this.center = center;
         this.rotation = rotation;
         this.id = id;
+        this.hp = hp;
     }
 
     public ShipDTO() {
@@ -41,4 +43,11 @@ public class ShipDTO implements Serializable {
         this.id = id;
     }
 
+    public Integer getHp() {
+        return hp;
+    }
+
+    public void setHp(Integer hp) {
+        this.hp = hp;
+    }
 }

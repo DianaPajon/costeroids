@@ -1,6 +1,6 @@
 package com.itrsa.costeroids.logic.engine.state.player
 
-class PlayerState(val playerId:String) {
+class PlayerState(val playerId:String, var hp:Integer) {
   var thrustPresses = 0;
   var brakePresses = 0;
   var leftPresses = 0;
