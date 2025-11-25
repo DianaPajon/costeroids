@@ -7,7 +7,7 @@ import com.itrsa.costeroids.logic.engine.state.GameState
 import com.itrsa.costeroids.logic.engine.state.world.Coordinate
 import com.itrsa.costeroids.logic.events.{NewPlayerEvent, PlayerEvent, TickEvent}
 
-import scala.jdk.CollectionConverters.*
+import scala.jdk.CollectionConverters._
 import java.util.UUID;
 
 class GameEngine {
@@ -22,8 +22,10 @@ class GameEngine {
   }
 
   //OneInstruction()
-  def processEvents(event:KeyDTO) = {
-      gameState = eventProcessor.processEvent(PlayerEvent(event.getEvent), gameState)
+  def processEvents(eventList:java.util.List[KeyDTO]) = {
+      gameState = eventList.asScala.foldRight(gameState)(
+        (keyDto, gs) => eventProcessor.processEvent(PlayerEvent(keyDto.getEvent), gs)
+      )
   }
 
   //interrupt->oneTick()

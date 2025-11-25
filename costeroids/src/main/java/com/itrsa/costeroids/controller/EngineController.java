@@ -7,6 +7,7 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +25,7 @@ public class EngineController {
     StatePublisher statePublisher = new StatePublisher();
 
     private LinkedTransferQueue<KeyDTO> arrivedEvents = new LinkedTransferQueue<KeyDTO>();
-    private LinkedTransferQueue<KeyDTO> processing = new LinkedTransferQueue<KeyDTO>();
+    private LinkedList<KeyDTO> processing = new LinkedList<KeyDTO>();
 
     private final ConcurrentMap<String, WebSocketSession> inputSocketMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<String, StateSuscriber> suscribers = new ConcurrentHashMap<>();
@@ -42,9 +43,7 @@ public class EngineController {
                 public void run() {
                     ticks += TICK_RATE;
                     arrivedEvents.drainTo(processing);
-                    processing.stream().forEach(
-                            (event) -> engine.processEvents(event)
-                    );
+                    engine.processEvents(processing);
                     processing.clear();
                     if(ticks >= TICKS_UPDATE){
                         ticks = 0;
