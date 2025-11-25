@@ -23,8 +23,8 @@ class GameEngine {
 
   //OneInstruction()
   def processEvents(eventList:java.util.List[KeyDTO]) = {
-      gameState = eventList.asScala.foldRight(gameState)(
-        (keyDto, gs) => eventProcessor.processEvent(PlayerEvent(keyDto.getEvent), gs)
+      gameState = eventList.asScala.foldLeft(gameState)(
+        (gs, keyDTO) => eventProcessor.processEvent(PlayerEvent(keyDTO.getEvent), gs)
       )
   }
 
