@@ -15,14 +15,14 @@ class GameEngine {
   var gameState = new GameState();
   var eventProcessor = new EventProcessor();
 
-  def addPlayer() = {
+  def addPlayer()  : String = {
     val id = UUID.randomUUID().toString
     gameState = eventProcessor.processEvent(NewPlayerEvent(id), gameState)
     id
   }
 
   //OneInstruction()
-  def processEvents(eventList:java.util.List[KeyDTO]) = {
+  def processEvents(eventList:java.util.List[KeyDTO]) : Unit = {
       gameState = eventList.asScala.foldLeft(gameState)(
         (gs, keyDTO) => eventProcessor.processEvent(PlayerEvent(keyDTO.getEvent), gs)
       )
@@ -35,16 +35,16 @@ class GameEngine {
   def poll() : StateDTO = {
     val ships = this.gameState.ships.map((key, ship) => ShipDTO(toDTO(ship.position), ship.rotation, key, ship.hp)).toList.asJava
     val bullets = this.gameState.bullets.map((key, bullet) => BulletDTO(toDTO(bullet.position), bullet.rotation, key, bullet.playerId)).toList.asJava
-    StateDTO(ships, bullets, getDeaths(), getWinner())
+    StateDTO(ships, bullets, getDeaths, getWinner)
   }
 
-  def getDeaths()  : java.util.List[String]  = {
+  private def getDeaths  : java.util.List[String]  = {
     this.gameState.players.filter((id, state) => {
       state.death
     }).map((id, state) => id).toList.asJava
   }
 
-  def getWinner() : String   = {
+  private def getWinner : String   = {
     this.gameState.players.filter((id, state) => state.win).map((id, state) => id).headOption.getOrElse("")
   }
 
