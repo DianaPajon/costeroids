@@ -4,12 +4,13 @@ import com.itrsa.costeroids.logic.dto.output.StateDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Flow;
 
 public class StatePublisher implements Flow.Publisher<StateDTO> {
 
-    List<Flow.Subscriber<? super StateDTO>> subscribers = new ArrayList<>();
-    List<Flow.Subscriber<? super StateDTO>> removed= new ArrayList<>();
+    ConcurrentLinkedDeque<Flow.Subscriber<? super StateDTO>> subscribers = new ConcurrentLinkedDeque<>();
+
     @Override
     public void subscribe(Flow.Subscriber<? super StateDTO> subscriber) {
         this.subscribers.add(subscriber);
@@ -22,22 +23,18 @@ public class StatePublisher implements Flow.Publisher<StateDTO> {
 
                     @Override
                     public void cancel() {
-                        removed.add(subscriber);
+                        subscribers.remove(subscriber);
                     }
                 }
         );
     }
 
-    public void updateState(StateDTO state){
+    public void updateState(StateDTO state) {
         subscribers.forEach(
                 (subscriber -> {
-                    if(!removed.contains(subscriber)){
-                        subscriber.onNext(state);
-                    }
+                    subscriber.onNext(state);
                 })
         );
-        subscribers.removeAll(removed);
-        removed.clear();
     }
 }
 
