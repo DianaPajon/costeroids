@@ -1,23 +1,17 @@
 package com.itrsa.costeroids.controller;
 
-import com.itrsa.costeroids.logic.dto.input.KeyDTO;
 import com.itrsa.costeroids.logic.dto.output.StateDTO;
-import com.itrsa.costeroids.logic.engine.GameEngine;
-import io.micronaut.serde.annotation.SerdeImport;
 import io.micronaut.websocket.WebSocketSession;
-import io.micronaut.websocket.exceptions.WebSocketException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Flow;
 public class StateSuscriber implements Flow.Subscriber<StateDTO> {
 
     WebSocketSession session;
     Flow.Subscription subscription;
     boolean completed = false;
-    private static final Logger LOG = LoggerFactory.getLogger(GameController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StateSuscriber.class);
 
     public StateSuscriber(WebSocketSession session){
         this.session = session;

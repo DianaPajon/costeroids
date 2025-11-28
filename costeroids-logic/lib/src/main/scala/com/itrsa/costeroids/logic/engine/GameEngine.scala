@@ -1,13 +1,13 @@
 package com.itrsa.costeroids.logic.engine
 
-import com.itrsa.costeroids.logic.dto.input.KeyDTO
+import com.itrsa.costeroids.logic.dto.input.{EventDTO, EventType}
 import com.itrsa.costeroids.logic.dto.output.{BulletDTO, CoordinateDTO, ShipDTO, StateDTO}
 import com.itrsa.costeroids.logic.engine.eventprocessor.EventProcessor
 import com.itrsa.costeroids.logic.engine.state.GameState
 import com.itrsa.costeroids.logic.engine.state.world.Coordinate
 import com.itrsa.costeroids.logic.events.{NewPlayerEvent, PlayerEvent, TickEvent}
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 import java.util.UUID;
 
 class GameEngine {
@@ -15,16 +15,10 @@ class GameEngine {
   var gameState = new GameState();
   var eventProcessor = new EventProcessor();
 
-  def addPlayer()  : String = {
-    val id = UUID.randomUUID().toString
-    gameState = eventProcessor.processEvent(NewPlayerEvent(id), gameState)
-    id
-  }
-
   //OneInstruction()
-  def processEvents(eventList:java.util.List[KeyDTO]) : Unit = {
+  def processEvents(eventList:java.util.List[EventDTO]) : Unit = {
       gameState = eventList.asScala.foldLeft(gameState)(
-        (gs, keyDTO) => eventProcessor.processEvent(PlayerEvent(keyDTO.getEvent), gs)
+        (gs, eventDTO) => eventProcessor.processEvent(eventDTO.getEvent, gs)
       )
   }
 
@@ -37,7 +31,7 @@ class GameEngine {
     val bullets = this.gameState.bullets.map((key, bullet) => BulletDTO(toDTO(bullet.position), bullet.rotation, key, bullet.playerId)).toList.asJava
     StateDTO(ships, bullets, getDeaths, getWinner)
   }
-
+  
   private def getDeaths  : java.util.List[String]  = {
     this.gameState.players.filter((id, state) => {
       state.death

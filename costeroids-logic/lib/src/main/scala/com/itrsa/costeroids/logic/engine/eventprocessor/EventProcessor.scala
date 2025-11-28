@@ -18,8 +18,9 @@ class EventProcessor {
       case TickEvent(elapsedTime:Double) => tickEvent(s, elapsedTime);
       case WinEvent(id:String) => winEvent(id, s);
       case HitEvent(id:String, bulletId:String) => hitEvent(id, bulletId,  s);
+      case _ => s
     }
-  
+
   def addPlayerEvent(id:String, s:GameState) = {
     s.addPlayer(id);
     s
@@ -134,7 +135,9 @@ class EventProcessor {
   def playerEvent(ke:KeyEvent, s:GameState) = {
     val  player = s.players(ke.playerId)
     ke match {
-      case ThrustEvent(id:String) => player.thrustPresses=player.thrustPresses+1 ;
+      case ThrustEvent(id:String) => {
+        player.thrustPresses=player.thrustPresses+1
+      } ;
       case KeyBrakeEvent(id:String) => player.brakePresses=player.brakePresses+1;
       case KeyLeftEvent(id:String) => player.leftPresses= player.leftPresses+1;
       case KeyRightEvent(id:String) => player.rightPresses=player.rightPresses+1;
@@ -168,7 +171,7 @@ class EventProcessor {
     Coordinate(math.cos(math.Pi/2-rotation), math.sin(math.Pi/2-rotation)).mult(player.thrustPresses - player.brakePresses).mult(0.0001)
 
   private def getRotation(player: PlayerState, rotation:Double) :Double = {
-    var suma = rotation +  (2 * math.Pi / 700) * player.rightPresses - (2 * math.Pi / 700) * player.leftPresses;
+    var suma = rotation +  (2 * math.Pi / 350) * player.rightPresses - (2 * math.Pi / 350) * player.leftPresses;
     while(suma > 2*math.Pi) suma = suma-2*math.Pi
     while(suma < 0) suma = suma+2*math.Pi
     suma

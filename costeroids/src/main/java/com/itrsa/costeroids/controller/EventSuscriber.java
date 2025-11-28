@@ -1,17 +1,16 @@
 package com.itrsa.costeroids.controller;
 
-import com.itrsa.costeroids.logic.dto.input.KeyDTO;
+import com.itrsa.costeroids.logic.dto.input.EventDTO;
 import jakarta.inject.Singleton;
 
-import java.util.List;
 import java.util.concurrent.Flow;
 
 @Singleton
-public class KeySuscriber implements Flow.Subscriber<KeyDTO> {
+public class EventSuscriber implements Flow.Subscriber<EventDTO> {
 
     private final EngineController engineController;
 
-    public KeySuscriber(EngineController controller){
+    public EventSuscriber(EngineController controller){
         engineController = controller;
     }
 
@@ -21,8 +20,8 @@ public class KeySuscriber implements Flow.Subscriber<KeyDTO> {
     }
 
     @Override
-    public void onNext(KeyDTO keyDTOS) {
-        engineController.updateState(keyDTOS);
+    public void onNext(EventDTO EventDTOS) {
+        engineController.updateState(EventDTOS);
     }
 
     @Override
