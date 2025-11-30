@@ -1,7 +1,7 @@
 package com.itrsa.costeroids.logic.dto.output;
 
 import java.io.Serializable;
-
+ 
 public class ShipDTO implements Serializable {
     CoordinateDTO center;
     double rotation;

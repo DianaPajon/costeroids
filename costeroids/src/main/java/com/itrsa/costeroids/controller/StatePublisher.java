@@ -1,21 +1,24 @@
 package com.itrsa.costeroids.controller;
 
 import com.itrsa.costeroids.logic.dto.output.StateDTO;
+import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Flow;
 
-public class StatePublisher implements Flow.Publisher<StateDTO> {
+public class StatePublisher implements Publisher<StateDTO> {
 
-    ConcurrentLinkedDeque<Flow.Subscriber<? super StateDTO>> subscribers = new ConcurrentLinkedDeque<>();
+    ConcurrentLinkedDeque<Subscriber<? super StateDTO>> subscribers = new ConcurrentLinkedDeque<>();
 
     @Override
-    public void subscribe(Flow.Subscriber<? super StateDTO> subscriber) {
+    public void subscribe(Subscriber<? super StateDTO> subscriber) {
         this.subscribers.add(subscriber);
         subscriber.onSubscribe(
-                new Flow.Subscription() {
+                new Subscription() {
                     @Override
                     public void request(long l) {
 

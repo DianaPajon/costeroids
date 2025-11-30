@@ -2,14 +2,16 @@ package com.itrsa.costeroids.controller;
 
 import com.itrsa.costeroids.logic.dto.output.StateDTO;
 import io.micronaut.websocket.WebSocketSession;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Flow;
-public class StateSuscriber implements Flow.Subscriber<StateDTO> {
+public class StateSuscriber implements Subscriber<StateDTO> {
 
     WebSocketSession session;
-    Flow.Subscription subscription;
+    Subscription subscription;
     boolean completed = false;
     private static final Logger LOG = LoggerFactory.getLogger(StateSuscriber.class);
 
@@ -18,7 +20,7 @@ public class StateSuscriber implements Flow.Subscriber<StateDTO> {
     }
 
     @Override
-    public void onSubscribe(Flow.Subscription subscription) {
+    public void onSubscribe(Subscription subscription) {
         this.subscription = subscription;
     }
 
@@ -32,7 +34,7 @@ public class StateSuscriber implements Flow.Subscriber<StateDTO> {
                             session.close();
                             subscription.cancel();;
                         }
-                        return state;
+                        return t;
                     }
             );
         } catch (Exception e){

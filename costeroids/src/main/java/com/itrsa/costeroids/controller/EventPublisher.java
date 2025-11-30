@@ -3,15 +3,17 @@ package com.itrsa.costeroids.controller;
 import com.itrsa.costeroids.logic.dto.input.EventDTO;
 import com.itrsa.costeroids.logic.dto.input.EventType;
 import io.micronaut.websocket.WebSocketSession;
+import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscriber;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Flow;
 
-public class EventPublisher implements Flow.Publisher<EventDTO> {
+public class EventPublisher implements Publisher<EventDTO> {
 
     private final EngineController controller;
-    private List<Flow.Subscriber<? super EventDTO>> subscribers;
+    private List<Subscriber<? super EventDTO>> subscribers;
 
 
     public EventPublisher(EngineController controller){
@@ -20,7 +22,7 @@ public class EventPublisher implements Flow.Publisher<EventDTO> {
     }
 
     @Override
-    public void subscribe(Flow.Subscriber<? super EventDTO> subscriber) {
+    public void subscribe(Subscriber<? super EventDTO> subscriber) {
         this.subscribers.add(subscriber);
     }
 
