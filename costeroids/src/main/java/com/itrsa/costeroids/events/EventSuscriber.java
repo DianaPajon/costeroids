@@ -1,6 +1,7 @@
 package com.itrsa.costeroids.events;
 
 import com.itrsa.costeroids.controller.EngineController;
+import com.itrsa.costeroids.controller.EventQueue;
 import com.itrsa.costeroids.logic.dto.input.EventDTO;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Subscriber;
@@ -9,10 +10,10 @@ import org.reactivestreams.Subscription;
 @Singleton
 public class EventSuscriber implements Subscriber<EventDTO> {
 
-    private final EngineController engineController;
+    private final EventQueue eventQueue;
 
-    public EventSuscriber(EngineController controller){
-        engineController = controller;
+    public EventSuscriber(EventQueue queue){
+        eventQueue = queue;
     }
 
 
@@ -22,8 +23,8 @@ public class EventSuscriber implements Subscriber<EventDTO> {
     }
 
     @Override
-    public void onNext(EventDTO EventDTOS) {
-        engineController.updateState(EventDTOS);
+    public void onNext(EventDTO EventDTO) {
+        eventQueue.offer(EventDTO);
     }
 
     @Override

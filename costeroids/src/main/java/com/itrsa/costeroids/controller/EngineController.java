@@ -26,13 +26,17 @@ public class EngineController {
     @Value("${costeroids.update-delay}")
     private  Integer updateDelay = 30;
 
-    final GameEngine engine = new GameEngine();
+    private final EventQueue eventQueue;
+    private final GameEngine engine = new GameEngine();
+
+    public EngineController(EventQueue eventQueue){
+        this.eventQueue = eventQueue;
+    }
 
     Long lastTick = 0L;
 
     StatePublisher statePublisher = new StatePublisher();
 
-    private final LinkedTransferQueue<EventDTO> arrivedEvents = new LinkedTransferQueue<>();
     private final LinkedList<EventDTO> processing = new LinkedList<>();
 
 
@@ -40,14 +44,10 @@ public class EngineController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EngineController.class);
 
-    public EngineController(){
-
-    }
-
     @Scheduled(fixedDelay = "${costeroids.tick-delay}ms")
     public void engineTick(){
         ticks += tickDelay;
-        arrivedEvents.drainTo(processing);
+        eventQueue.drainTo(processing);
         engine.processEvents(processing);
         processing.clear();
         if(ticks >= updateDelay){
@@ -59,18 +59,13 @@ public class EngineController {
             lastTick = newTick;
         }
     }
-    public void updateState(EventDTO keysPresses){
-        arrivedEvents.offer(keysPresses);
-    }
 
     public String addPlayer(String username, WebSocketSession session){
         var id = UUID.randomUUID().toString();
         var eventDTO = new EventDTO(EventType.NEW_PLAYER_EVENT, id);
-        arrivedEvents.offer(eventDTO);
+        eventQueue.offer(eventDTO);
         var subscriber = new StateSuscriber(session);
         this.statePublisher.subscribe(subscriber);
-
-
         return id;
     }
 
