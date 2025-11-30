@@ -1,6 +1,7 @@
 package com.itrsa.costeroids.events;
 
 import com.itrsa.costeroids.controller.EngineController;
+import com.itrsa.costeroids.controller.EventQueue;
 import com.itrsa.costeroids.logic.dto.input.EventDTO;
 import com.itrsa.costeroids.logic.dto.input.EventType;
 import io.micronaut.websocket.WebSocketSession;
@@ -12,12 +13,12 @@ import java.util.List;
 
 public class EventPublisher implements Publisher<EventDTO> {
 
-    private final EngineController controller;
+    private final EventQueue eventQueue;
     private List<Subscriber<? super EventDTO>> subscribers;
 
 
-    public EventPublisher(EngineController controller){
-        this.controller = controller;
+    public EventPublisher(EventQueue eventQueue){
+        this.eventQueue = eventQueue;
         this.subscribers = new ArrayList<>();
     }
 
@@ -27,7 +28,7 @@ public class EventPublisher implements Publisher<EventDTO> {
     }
 
     public String newPlayerEvent(WebSocketSession session, String username){
-        var id = this.controller.addPlayer(username, session);
+        var id = this.eventQueue.addPlayer(username, session);
         var event = new EventDTO(EventType.NEW_PLAYER_EVENT, id);
         this.subscribers.forEach(
                 (subscriber -> {

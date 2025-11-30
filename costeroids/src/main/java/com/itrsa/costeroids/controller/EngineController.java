@@ -28,14 +28,14 @@ public class EngineController {
 
     private final EventQueue eventQueue;
     private final GameEngine engine = new GameEngine();
+    private final StatePublisher statePublisher;
 
-    public EngineController(EventQueue eventQueue){
+    public EngineController(EventQueue eventQueue, StatePublisher statePublisher){
         this.eventQueue = eventQueue;
+        this.statePublisher = statePublisher;
     }
 
     Long lastTick = 0L;
-
-    StatePublisher statePublisher = new StatePublisher();
 
     private final LinkedList<EventDTO> processing = new LinkedList<>();
 

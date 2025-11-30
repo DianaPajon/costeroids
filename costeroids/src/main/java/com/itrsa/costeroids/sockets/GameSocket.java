@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itrsa.costeroids.controller.EngineController;
+import com.itrsa.costeroids.controller.EventQueue;
 import com.itrsa.costeroids.events.EventPublisher;
 import com.itrsa.costeroids.events.EventSuscriber;
 import com.itrsa.costeroids.logic.dto.input.EventDTO;
@@ -19,16 +20,16 @@ import org.slf4j.LoggerFactory;
 @ServerWebSocket("/ws/game/{username}")
 public class GameSocket {
 
-    private final EngineController engineController;
+    private final EventQueue eventQueue;
     private final EventSuscriber suscriber;
     private final EventPublisher publisher;
     private final ObjectMapper mapper = new ObjectMapper();
     private static final Logger LOG = LoggerFactory.getLogger(GameSocket.class);
 
-    public GameSocket(EngineController engineController,  EventSuscriber suscriber) {
-        this.engineController = engineController;
+    public GameSocket(EventQueue eventQueue, EventSuscriber suscriber) {
+        this.eventQueue = eventQueue;
         this.suscriber = suscriber;
-        this.publisher = new EventPublisher(engineController);
+        this.publisher = new EventPublisher(eventQueue);
         publisher.subscribe(suscriber);
         LOG.debug("socket creado!");
     }
