@@ -1,14 +1,11 @@
-package com.itrsa.costeroids.controller;
+package com.itrsa.costeroids.state;
 
 import com.itrsa.costeroids.logic.dto.output.StateDTO;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.Flow;
 
 public class StatePublisher implements Publisher<StateDTO> {
 

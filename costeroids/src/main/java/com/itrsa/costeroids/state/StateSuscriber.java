@@ -1,4 +1,4 @@
-package com.itrsa.costeroids.controller;
+package com.itrsa.costeroids.state;
 
 import com.itrsa.costeroids.logic.dto.output.StateDTO;
 import io.micronaut.websocket.WebSocketSession;
@@ -7,7 +7,6 @@ import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.Flow;
 public class StateSuscriber implements Subscriber<StateDTO> {
 
     WebSocketSession session;

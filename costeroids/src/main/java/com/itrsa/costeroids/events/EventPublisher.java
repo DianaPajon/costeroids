@@ -1,5 +1,6 @@
-package com.itrsa.costeroids.controller;
+package com.itrsa.costeroids.events;
 
+import com.itrsa.costeroids.controller.EngineController;
 import com.itrsa.costeroids.logic.dto.input.EventDTO;
 import com.itrsa.costeroids.logic.dto.input.EventType;
 import io.micronaut.websocket.WebSocketSession;
@@ -8,7 +9,6 @@ import org.reactivestreams.Subscriber;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Flow;
 
 public class EventPublisher implements Publisher<EventDTO> {
 

@@ -1,5 +1,6 @@
-package com.itrsa.costeroids.controller;
+package com.itrsa.costeroids.events;
 
+import com.itrsa.costeroids.controller.EngineController;
 import com.itrsa.costeroids.logic.dto.input.EventDTO;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Subscriber;
