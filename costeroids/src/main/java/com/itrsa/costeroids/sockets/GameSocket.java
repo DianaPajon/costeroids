@@ -41,7 +41,7 @@ public class GameSocket {
     @OnClose
     public void onClose(String username, WebSocketSession session) {
         LOG.debug("socket cerrado!");
-        engineController.closeSession(username);
+        suscriber.onComplete();
     }
 
     @OnMessage

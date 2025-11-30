@@ -5,3 +5,6 @@ micronaut:
         enabled: true
         mapping: /**
         paths: classpath:public
+costeroids:
+  tick-delay: 15
+  update-delay: 30

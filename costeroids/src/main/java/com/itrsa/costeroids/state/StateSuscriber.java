@@ -25,18 +25,19 @@ public class StateSuscriber implements Subscriber<StateDTO> {
 
     @Override
     public void onNext(StateDTO newState) {
-        if(completed) return;
+        if(completed || !session.isOpen()) return;
         try{
-            session.sendAsync(newState).handle(
-                    (t, state) -> {
+            session.sendAsync(newState).exceptionally(
+                    (t) -> {
                         if(!session.isOpen()){
                             session.close();
-                            subscription.cancel();;
+                            onComplete();
                         }
-                        return t;
+                        return newState;
                     }
             );
         } catch (Exception e){
+
             e.printStackTrace();
         }
 
