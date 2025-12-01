@@ -9,7 +9,7 @@ var userId;
 #WebSocket
 var rng = RandomNumberGenerator.new()
 var username := rng.randi()
-var websocket_url :=  dwad"ws://localhost:8080/ws/game/player"
+var websocket_url :=  "ws://localhost:8080/ws/game/player"
 var inputsocket := WebSocketPeer.new();
 var inputopen = false;
 

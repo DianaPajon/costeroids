@@ -24,7 +24,6 @@ public class GameSocket {
     private final EventQueue eventQueue;
     private final EventSuscriber suscriber;
     private final EventPublisher publisher;
-    private final ObjectMapper mapper = new ObjectMapper();
     private String playerId;
     private static final Logger LOG = LoggerFactory.getLogger(GameSocket.class);
 

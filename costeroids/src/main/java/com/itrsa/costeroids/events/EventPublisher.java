@@ -6,11 +6,14 @@ import com.itrsa.costeroids.logic.dto.input.EventType;
 import io.micronaut.websocket.WebSocketSession;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EventPublisher implements Publisher<EventDTO> {
 
     private final EventQueue eventQueue;
     private final Subscriber<? super EventDTO> subscriber;
+    private static final Logger log = LoggerFactory.getLogger(EventPublisher.class);
 
 
     public EventPublisher(EventQueue eventQueue, EventSuscriber suscriber){
@@ -20,13 +23,15 @@ public class EventPublisher implements Publisher<EventDTO> {
 
     @Override
     public void subscribe(Subscriber<? super EventDTO> subscriber) {
-        //
+        log.debug("Suscribe");
     }
 
     public String newPlayerEvent(WebSocketSession session){
+        log.debug("Nuevo jugador");
         var id = this.eventQueue.addPlayer(session);
         var event = new EventDTO(EventType.NEW_PLAYER_EVENT, id);
         subscriber.onNext(event);
+        log.debug("id: " + id);
         return id;
     }
 
