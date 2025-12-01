@@ -15,9 +15,9 @@ class EventProcessor {
       case NewPlayerEvent (id:String) => addPlayerEvent(id, s);
       case PlayerEvent(ke:KeyEvent) => playerEvent(ke, s);
       case PlayerDeathEvent(id:String) => deathEvent(id, s);
-      case TickEvent(elapsedTime:Double) => tickEvent(s, elapsedTime);
       case WinEvent(id:String) => winEvent(id, s);
       case HitEvent(id:String, bulletId:String) => hitEvent(id, bulletId,  s);
+      case TickEvent(elapsedTime:Double) => tickEvent(s, elapsedTime);
       case _ => s
     }
 
@@ -31,106 +31,7 @@ class EventProcessor {
     s.players(id).death = true
     s
   }
-  def tickEvent(gameState : GameState, elapsedTime:Double) = {
-    val playerIds = gameState.players.filter((id, player) => !player.death).keySet;
-    //run actions and clear frame state
-    playerIds.foreach(
-      (id:String) => {
-        val player = gameState.players(id)
-        if(player.fireEvents > 0){
-          gameState.bullets.put(UUID.randomUUID().toString, getBullet(player, gameState))
-        }
-        var ship = gameState.ships(id)
-        ship.speed = ship.speed.plus(getSpeed(player, ship.rotation))
-        ship.rotation = getRotation(player, gameState.ships(id).rotation)
-        gameState.ships.put(id, ship)
-        gameState.players.put(id, new PlayerState(id, 10))
-      }
-    )
-
-
-
-    //move everything
-    gameState.ships = gameState.ships.map(
-      (id, ship) => {
-        ship.position = ship.position.plus(ship.speed.mult(elapsedTime*10000))
-        if(ship.position.x < 0)
-          ship.position = Coordinate(ship.position.x + 1152, ship.position.y)
-        if (ship.position.x > 1152)
-          ship.position = Coordinate(ship.position.x - 1152, ship.position.y)
-        if (ship.position.y < 0)
-          ship.position = Coordinate(ship.position.x, ship.position.y + 648)
-        if (ship.position.y > 648)
-          ship.position = Coordinate(ship.position.x, ship.position.y - 648)
-        (id, ship)
-      }
-    )
-    val toRemove = gameState.ships.filter((id, ship) =>
-      ship.position.x > 1152 || ship.position.y > 648 || ship.position.x < 0 || ship.position.y < 0
-    ).keySet
-    gameState.ships = gameState.ships.filter((key, ship) => !toRemove.contains(key))
-
-    gameState.bullets = gameState.bullets.map(
-      (id, bullet) => {
-        bullet.position = bullet.position.plus(bullet.speed.mult(elapsedTime))
-        (id, bullet)
-      }
-    )
-    val bulletsToRemove = gameState.bullets.filter((id, bullet) =>
-      bullet.position.x > 1152 || bullet.position.y > 648 || bullet.position.x < 0 || bullet.position.y < 0
-    ).keySet
-    gameState.bullets = gameState.bullets.filter((key,bulet) => !bulletsToRemove.contains(key))
-
-
-
-
-    //check for deaths
-    val deathEvents = gameState.bullets.map(
-      (id, bullet) => {
-        val hit = gameState.ships.filter((id, ship) =>
-        {
-          bullet.playerId != ship.playerId && ship.collides(bullet) && ship.hp <= 1
-        }).map((k,v) => k).headOption
-        hit.map(present => PlayerDeathEvent(present))
-      }
-    ).filter(
-      option => {
-        option.isDefined
-      }
-    )
-
-    //process deaths
-    var finalState = deathEvents.foldLeft(gameState)(
-      (state, event) => {
-       this.processEvent(event.get, state);
-      }
-    )
-
-
-    //check for collisions
-    val hitEvents = gameState.bullets.map(
-      (id, bullet) => {
-        val hit = gameState.ships.filter((id, ship) =>
-        {
-          bullet.playerId != ship.playerId && ship.collides(bullet) && ship.hp > 1
-        }).map((k,v) => k).headOption
-        hit.map(present => HitEvent(present, id))
-      }
-    ).filter(
-      option => {
-        option.isDefined
-      }
-    )
-    finalState = hitEvents.foldLeft(gameState)(
-      (state, event) => {
-        this.processEvent(event.get, state);
-      }
-    )
-
-
-    finalState
-  }
-
+  
 
   def playerEvent(ke:KeyEvent, s:GameState) = {
     val  player = s.players(ke.playerId)
@@ -184,6 +85,102 @@ class EventProcessor {
     val speed = Coordinate(xCoord, yCoord).mult(BULLET_SPEED)
     val position = gameState.ships(player.playerId).position;
     return Bullet(position, speed, math.Pi/2-rotation, player.playerId);
+  }
+
+  def tickEvent(gameState: GameState, elapsedTime: Double) = {
+    val playerIds = gameState.players.filter((id, player) => !player.death).keySet;
+    //run actions and clear frame state
+    playerIds.foreach(
+      (id: String) => {
+        val player = gameState.players(id)
+        if (player.fireEvents > 0) {
+          gameState.bullets.put(UUID.randomUUID().toString, getBullet(player, gameState))
+        }
+        var ship = gameState.ships(id)
+        ship.speed = ship.speed.plus(getSpeed(player, ship.rotation))
+        ship.rotation = getRotation(player, gameState.ships(id).rotation)
+        gameState.ships.put(id, ship)
+        gameState.players.put(id, new PlayerState(id, 10))
+      }
+    )
+
+
+
+    //move everything
+    gameState.ships = gameState.ships.map(
+      (id, ship) => {
+        ship.position = ship.position.plus(ship.speed.mult(elapsedTime * 10000))
+        if (ship.position.x < 0)
+          ship.position = Coordinate(ship.position.x + 1152, ship.position.y)
+        if (ship.position.x > 1152)
+          ship.position = Coordinate(ship.position.x - 1152, ship.position.y)
+        if (ship.position.y < 0)
+          ship.position = Coordinate(ship.position.x, ship.position.y + 648)
+        if (ship.position.y > 648)
+          ship.position = Coordinate(ship.position.x, ship.position.y - 648)
+        (id, ship)
+      }
+    )
+    val toRemove = gameState.ships.filter((id, ship) =>
+      ship.position.x > 1152 || ship.position.y > 648 || ship.position.x < 0 || ship.position.y < 0
+    ).keySet
+    gameState.ships = gameState.ships.filter((key, ship) => !toRemove.contains(key))
+
+    gameState.bullets = gameState.bullets.map(
+      (id, bullet) => {
+        bullet.position = bullet.position.plus(bullet.speed.mult(elapsedTime))
+        (id, bullet)
+      }
+    )
+    val bulletsToRemove = gameState.bullets.filter((id, bullet) =>
+      bullet.position.x > 1152 || bullet.position.y > 648 || bullet.position.x < 0 || bullet.position.y < 0
+    ).keySet
+    gameState.bullets = gameState.bullets.filter((key, bulet) => !bulletsToRemove.contains(key))
+
+
+    //check for deaths
+    val deathEvents = gameState.bullets.map(
+      (id, bullet) => {
+        val hit = gameState.ships.filter((id, ship) => {
+          bullet.playerId != ship.playerId && ship.collides(bullet) && ship.hp <= 1
+        }).map((k, v) => k).headOption
+        hit.map(present => PlayerDeathEvent(present))
+      }
+    ).filter(
+      option => {
+        option.isDefined
+      }
+    )
+
+    //process deaths
+    var finalState = deathEvents.foldLeft(gameState)(
+      (state, event) => {
+        this.processEvent(event.get, state);
+      }
+    )
+
+
+    //check for collisions
+    val hitEvents = gameState.bullets.map(
+      (id, bullet) => {
+        val hit = gameState.ships.filter((id, ship) => {
+          bullet.playerId != ship.playerId && ship.collides(bullet) && ship.hp > 1
+        }).map((k, v) => k).headOption
+        hit.map(present => HitEvent(present, id))
+      }
+    ).filter(
+      option => {
+        option.isDefined
+      }
+    )
+    finalState = hitEvents.foldLeft(gameState)(
+      (state, event) => {
+        this.processEvent(event.get, state);
+      }
+    )
+
+
+    finalState
   }
 
 

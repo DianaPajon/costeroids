@@ -37,7 +37,6 @@ public class StateSuscriber implements Subscriber<StateDTO> {
                     }
             );
         } catch (Exception e){
-
             e.printStackTrace();
         }
 

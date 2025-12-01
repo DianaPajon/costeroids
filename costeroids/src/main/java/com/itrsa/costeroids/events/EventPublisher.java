@@ -14,35 +14,27 @@ import java.util.List;
 public class EventPublisher implements Publisher<EventDTO> {
 
     private final EventQueue eventQueue;
-    private List<Subscriber<? super EventDTO>> subscribers;
+    private final Subscriber<? super EventDTO> subscriber;
 
 
-    public EventPublisher(EventQueue eventQueue){
+    public EventPublisher(EventQueue eventQueue, EventSuscriber suscriber){
         this.eventQueue = eventQueue;
-        this.subscribers = new ArrayList<>();
+        this.subscriber = suscriber;
     }
 
     @Override
     public void subscribe(Subscriber<? super EventDTO> subscriber) {
-        this.subscribers.add(subscriber);
+
     }
 
     public String newPlayerEvent(WebSocketSession session, String username){
         var id = this.eventQueue.addPlayer(username, session);
         var event = new EventDTO(EventType.NEW_PLAYER_EVENT, id);
-        this.subscribers.forEach(
-                (subscriber -> {
-                    subscriber.onNext(event);
-                })
-        );
+        subscriber.onNext(event);
         return id;
     }
 
     public void keyPressEvent(EventDTO event){
-        this.subscribers.forEach(
-                (subscriber -> {
-                    subscriber.onNext(event);
-                })
-        );
+        subscriber.onNext(event);
     }
 }

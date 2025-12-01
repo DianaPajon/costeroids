@@ -8,6 +8,7 @@ import com.itrsa.costeroids.controller.EventQueue;
 import com.itrsa.costeroids.events.EventPublisher;
 import com.itrsa.costeroids.events.EventSuscriber;
 import com.itrsa.costeroids.logic.dto.input.EventDTO;
+import io.micronaut.context.annotation.Prototype;
 import io.micronaut.websocket.WebSocketSession;
 import io.micronaut.websocket.annotation.OnClose;
 import io.micronaut.websocket.annotation.OnMessage;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @ServerWebSocket("/ws/game/{username}")
+@Prototype
 public class GameSocket {
 
     private final EventQueue eventQueue;
@@ -29,8 +31,7 @@ public class GameSocket {
     public GameSocket(EventQueue eventQueue, EventSuscriber suscriber) {
         this.eventQueue = eventQueue;
         this.suscriber = suscriber;
-        this.publisher = new EventPublisher(eventQueue);
-        publisher.subscribe(suscriber);
+        this.publisher = new EventPublisher(eventQueue, suscriber);
         LOG.debug("socket creado!");
     }
 
