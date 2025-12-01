@@ -7,11 +7,12 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Singleton
 public class StatePublisher implements Publisher<StateDTO> {
 
-    ConcurrentLinkedDeque<Subscriber<? super StateDTO>> subscribers = new ConcurrentLinkedDeque<>();
+    ConcurrentLinkedQueue<Subscriber<? super StateDTO>> subscribers = new ConcurrentLinkedQueue<>();
 
     @Override
     public void subscribe(Subscriber<? super StateDTO> subscriber) {

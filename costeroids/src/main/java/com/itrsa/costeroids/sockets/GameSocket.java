@@ -3,7 +3,6 @@ package com.itrsa.costeroids.sockets;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itrsa.costeroids.controller.EngineController;
 import com.itrsa.costeroids.controller.EventQueue;
 import com.itrsa.costeroids.events.EventPublisher;
 import com.itrsa.costeroids.events.EventSuscriber;
@@ -18,7 +17,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ServerWebSocket("/ws/game/{username}")
+@ServerWebSocket("/ws/game/player")
 @Prototype
 public class GameSocket {
 
@@ -26,6 +25,7 @@ public class GameSocket {
     private final EventSuscriber suscriber;
     private final EventPublisher publisher;
     private final ObjectMapper mapper = new ObjectMapper();
+    private String playerId;
     private static final Logger LOG = LoggerFactory.getLogger(GameSocket.class);
 
     public GameSocket(EventQueue eventQueue, EventSuscriber suscriber) {
@@ -36,19 +36,20 @@ public class GameSocket {
     }
 
     @OnOpen
-    public Publisher<String> onOpen(String username, WebSocketSession session) {
-        return session.send(publisher.newPlayerEvent(session, username));
+    public Publisher<String> onOpen(WebSocketSession session) {
+        this.playerId = publisher.newPlayerEvent(session);
+        return session.send(playerId);
     }
 
     @OnClose
-    public void onClose(String username, WebSocketSession session) {
+    public void onClose(WebSocketSession session) {
         LOG.debug("socket cerrado!");
         suscriber.onComplete();
     }
 
     @OnMessage
-    public Publisher<String> onMessage(String message,String username, WebSocketSession session) throws JsonMappingException, JsonProcessingException {
-        publisher.keyPressEvent(mapper.readValue(message, EventDTO.class));
+    public Publisher<String> onMessage(EventDTO message,WebSocketSession session) throws JsonMappingException, JsonProcessingException {
+       if(this.playerId.equalsIgnoreCase(message.getPlayerId())) publisher.keyPressEvent(message);
         return null;
     }
 

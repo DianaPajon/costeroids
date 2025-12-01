@@ -29,7 +29,7 @@ public class EventQueue {
     }
 
 
-    public String addPlayer(String username, WebSocketSession session){
+    public String addPlayer(WebSocketSession session){
         var id = UUID.randomUUID().toString();
         var eventDTO = new EventDTO(EventType.NEW_PLAYER_EVENT, id);
         arrivedEvents.offer(eventDTO);

@@ -1,23 +1,18 @@
 package com.itrsa.costeroids.controller;
 
 import com.itrsa.costeroids.logic.dto.input.EventDTO;
-import com.itrsa.costeroids.logic.dto.input.EventType;
 import com.itrsa.costeroids.logic.engine.GameEngine;
 import com.itrsa.costeroids.state.StatePublisher;
-import com.itrsa.costeroids.state.StateSuscriber;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.scheduling.annotation.Scheduled;
-import io.micronaut.websocket.WebSocketSession;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
-import java.util.UUID;
-import java.util.concurrent.LinkedTransferQueue;
 
 @Singleton
-public class EngineController {
+public class GameController {
 
 
     @Value("${costeroids.tick-delay}")
@@ -30,7 +25,7 @@ public class EngineController {
     private final GameEngine engine = new GameEngine();
     private final StatePublisher statePublisher;
 
-    public EngineController(EventQueue eventQueue, StatePublisher statePublisher){
+    public GameController(EventQueue eventQueue, StatePublisher statePublisher){
         this.eventQueue = eventQueue;
         this.statePublisher = statePublisher;
     }
@@ -42,7 +37,7 @@ public class EngineController {
 
     private static int ticks = 0;
 
-    private static final Logger LOG = LoggerFactory.getLogger(EngineController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GameController.class);
 
     @Scheduled(fixedDelay = "${costeroids.tick-delay}ms")
     public void engineTick(){
@@ -58,15 +53,6 @@ public class EngineController {
             statePublisher.updateState(newState);
             lastTick = newTick;
         }
-    }
-
-    public String addPlayer(String username, WebSocketSession session){
-        var id = UUID.randomUUID().toString();
-        var eventDTO = new EventDTO(EventType.NEW_PLAYER_EVENT, id);
-        eventQueue.offer(eventDTO);
-        var subscriber = new StateSuscriber(session);
-        this.statePublisher.subscribe(subscriber);
-        return id;
     }
 
 }
