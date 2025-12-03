@@ -6,9 +6,9 @@ extends AnimatedSprite2D
 @export var dead = false
 @export var id = ""
 
+func _ready() -> void:
+	modulate = Color(1.5, 1.5, 1.5)
 
-func _init():
-	modulate = Color(4,1,3)
 
 func _process(delta:float):
 	if(firing):

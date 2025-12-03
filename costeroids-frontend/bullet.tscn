@@ -1,8 +1,45 @@
-[gd_scene load_steps=2 format=3 uid="uid://kdi2vj0k45il"]
+[gd_scene load_steps=7 format=3 uid="uid://kdi2vj0k45il"]
 
-[ext_resource type="Texture2D" uid="uid://c1em8hjidghs0" path="res://balita.png" id="1_v7oki"]
+[ext_resource type="Texture2D" uid="uid://b1wqgb3yadyu1" path="res://bala_spritesheet.png" id="1_v7oki"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v8qja"]
+atlas = ExtResource("1_v7oki")
+region = Rect2(0, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t4vbm"]
+atlas = ExtResource("1_v7oki")
+region = Rect2(200, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2b2rl"]
+atlas = ExtResource("1_v7oki")
+region = Rect2(400, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b7duk"]
+atlas = ExtResource("1_v7oki")
+region = Rect2(600, 0, 200, 200)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t2bd8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v8qja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t4vbm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2b2rl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b7duk")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="Bullet" type="Node2D"]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_v7oki")
+[node name="bala" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.2, 0.2)
+sprite_frames = SubResource("SpriteFrames_t2bd8")

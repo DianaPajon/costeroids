@@ -1,65 +1,75 @@
-[gd_scene load_steps=15 format=3 uid="uid://bmrcmt0raal66"]
+[gd_scene load_steps=21 format=3 uid="uid://bmrcmt0raal66"]
 
-[ext_resource type="Texture2D" uid="uid://cltlvbaa08qo7" path="res://sprite_sheet.png" id="1_ilgfq"]
 [ext_resource type="Script" uid="uid://4cmocbxp5c7k" path="res://nave_bridge.gd" id="1_j1vys"]
 [ext_resource type="Script" uid="uid://cpeerdowlwenl" path="res://nave_controller.gd" id="2_j1vys"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ilgfq"]
-atlas = ExtResource("1_ilgfq")
-region = Rect2(64, 192, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_j1vys"]
-atlas = ExtResource("1_ilgfq")
-region = Rect2(0, 256, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jemat"]
-atlas = ExtResource("1_ilgfq")
-region = Rect2(64, 256, 64, 64)
+[ext_resource type="Texture2D" uid="uid://vf45kjxi3qhj" path="res://nave_spritesheet.png" id="2_jemat"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_53dx7"]
-atlas = ExtResource("1_ilgfq")
-region = Rect2(64, 0, 64, 64)
+atlas = ExtResource("2_jemat")
+region = Rect2(400, 0, 200, 200)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6rt8y"]
-atlas = ExtResource("1_ilgfq")
-region = Rect2(0, 64, 64, 64)
+atlas = ExtResource("2_jemat")
+region = Rect2(400, 400, 200, 200)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1poy6"]
-atlas = ExtResource("1_ilgfq")
-region = Rect2(64, 64, 64, 64)
+atlas = ExtResource("2_jemat")
+region = Rect2(600, 400, 200, 200)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xqbh8"]
-atlas = ExtResource("1_ilgfq")
-region = Rect2(0, 128, 64, 64)
+atlas = ExtResource("2_jemat")
+region = Rect2(0, 600, 200, 200)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xrwbh"]
-atlas = ExtResource("1_ilgfq")
-region = Rect2(64, 128, 64, 64)
+atlas = ExtResource("2_jemat")
+region = Rect2(200, 600, 200, 200)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ij32g"]
-atlas = ExtResource("1_ilgfq")
-region = Rect2(0, 192, 64, 64)
+atlas = ExtResource("2_jemat")
+region = Rect2(0, 0, 200, 200)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gi7du"]
-atlas = ExtResource("1_ilgfq")
-region = Rect2(0, 0, 64, 64)
+atlas = ExtResource("2_jemat")
+region = Rect2(200, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qagoq"]
+atlas = ExtResource("2_jemat")
+region = Rect2(400, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p6wf0"]
+atlas = ExtResource("2_jemat")
+region = Rect2(600, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ffj31"]
+atlas = ExtResource("2_jemat")
+region = Rect2(0, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c3aq3"]
+atlas = ExtResource("2_jemat")
+region = Rect2(200, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0dypr"]
+atlas = ExtResource("2_jemat")
+region = Rect2(400, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dajk5"]
+atlas = ExtResource("2_jemat")
+region = Rect2(600, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pwq2r"]
+atlas = ExtResource("2_jemat")
+region = Rect2(0, 400, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aysm3"]
+atlas = ExtResource("2_jemat")
+region = Rect2(200, 400, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b1l8w"]
+atlas = ExtResource("2_jemat")
+region = Rect2(0, 0, 200, 200)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_qagoq"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ilgfq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j1vys")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jemat")
-}],
-"loop": true,
-"name": &"die",
-"speed": 18.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_53dx7")
@@ -75,9 +85,41 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_xrwbh")
+}],
+"loop": true,
+"name": &"die",
+"speed": 18.0
 }, {
+"frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ij32g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gi7du")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qagoq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p6wf0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ffj31")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c3aq3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0dypr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dajk5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pwq2r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aysm3")
 }],
 "loop": true,
 "name": &"fire",
@@ -85,7 +127,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_gi7du")
+"texture": SubResource("AtlasTexture_b1l8w")
 }],
 "loop": true,
 "name": &"start",
@@ -93,6 +135,7 @@ animations = [{
 }]
 
 [node name="Navecita" type="Node2D"]
+scale = Vector2(0.3, 0.3)
 script = ExtResource("1_j1vys")
 
 [node name="navecita" type="AnimatedSprite2D" parent="."]

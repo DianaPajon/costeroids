@@ -1,11 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://d1wgdmoj65l4r"]
+[gd_scene load_steps=3 format=3 uid="uid://d1wgdmoj65l4r"]
 
 [ext_resource type="Script" uid="uid://bbsi5jnc0i6un" path="res://base_controller.gd" id="1_85rts"]
+[ext_resource type="Texture2D" uid="uid://cla83tbhhqps7" path="res://horsehead_nebula.bmp" id="2_g2ppn"]
 
 [node name="BaseNode" type="Node2D"]
 script = ExtResource("1_85rts")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-offset_right = 1152.0
-offset_bottom = 649.0
-color = Color(0.91864944, 0.8409691, 0.8669865, 1)
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 1200.0
+offset_bottom = 800.0
+texture = ExtResource("2_g2ppn")
+expand_mode = 2
